@@ -1,90 +1,80 @@
-// Power BI Portfolio — vanilla JavaScript
-// No libraries or build tools required.
-
 document.addEventListener("DOMContentLoaded", function () {
 
-  /* -----------------------------------------
-     1. Footer year
-  ----------------------------------------- */
+  /* =========================
+     FOOTER YEAR
+  ========================== */
 
-  const yearElement = document.getElementById("year");
+  const year = document.getElementById("year");
 
-  if (yearElement) {
-    yearElement.textContent = new Date().getFullYear();
+  if (year) {
+    year.textContent = new Date().getFullYear();
   }
 
 
-  /* -----------------------------------------
-     2. Mobile navigation
-  ----------------------------------------- */
+  /* =========================
+     MOBILE NAVIGATION
+  ========================== */
 
-  const menuButton = document.querySelector(".nav-toggle");
-  const navLinks = document.querySelector(".nav-links");
+  const menuToggle = document.getElementById("menuToggle");
+  const navMenu = document.getElementById("navMenu");
 
-  if (menuButton && navLinks) {
+  if (menuToggle && navMenu) {
 
-    menuButton.addEventListener("click", function () {
+    menuToggle.addEventListener("click", function () {
 
-      const isOpen = navLinks.classList.toggle("open");
+      const isOpen = navMenu.classList.toggle("open");
 
-      menuButton.setAttribute(
+      menuToggle.setAttribute(
         "aria-expanded",
         isOpen ? "true" : "false"
       );
 
-      menuButton.textContent = isOpen ? "Close" : "Menu";
+      menuToggle.setAttribute(
+        "aria-label",
+        isOpen
+          ? "Close navigation menu"
+          : "Open navigation menu"
+      );
+
+      menuToggle.textContent = isOpen
+        ? "Close"
+        : "Menu";
+
     });
 
 
-    // Close menu when a navigation link is clicked
+    /* Close mobile menu after clicking a link */
 
-    const links = navLinks.querySelectorAll("a");
+    const navLinks = navMenu.querySelectorAll("a");
 
-    links.forEach(function (link) {
+    navLinks.forEach(function (link) {
 
       link.addEventListener("click", function () {
 
-        navLinks.classList.remove("open");
+        navMenu.classList.remove("open");
 
-        menuButton.setAttribute(
+        menuToggle.setAttribute(
           "aria-expanded",
           "false"
         );
 
-        menuButton.textContent = "Menu";
+        menuToggle.setAttribute(
+          "aria-label",
+          "Open navigation menu"
+        );
+
+        menuToggle.textContent = "Menu";
+
       });
-
-    });
-
-
-    // Close menu when clicking outside
-
-    document.addEventListener("click", function (event) {
-
-      if (
-        navLinks.classList.contains("open") &&
-        !navLinks.contains(event.target) &&
-        !menuButton.contains(event.target)
-      ) {
-
-        navLinks.classList.remove("open");
-
-        menuButton.setAttribute(
-          "aria-expanded",
-          "false"
-        );
-
-        menuButton.textContent = "Menu";
-      }
 
     });
 
   }
 
 
-  /* -----------------------------------------
-     3. Placeholder Power BI links
-  ----------------------------------------- */
+  /* =========================
+     PLACEHOLDER PROJECT LINKS
+  ========================== */
 
   const placeholderLinks = document.querySelectorAll(
     '[data-placeholder="true"]'
@@ -97,87 +87,11 @@ document.addEventListener("DOMContentLoaded", function () {
       event.preventDefault();
 
       alert(
-        "This is a placeholder. Replace the # in index.html with your Power BI report URL or screenshot."
+        "This project does not have a live dashboard link yet. Replace the placeholder link in index.html with your Power BI URL."
       );
 
     });
 
   });
-
-
-  /* -----------------------------------------
-     4. Active navigation while scrolling
-  ----------------------------------------- */
-
-  const sections = document.querySelectorAll(
-    "main section[id]"
-  );
-
-  const navigationAnchors = document.querySelectorAll(
-    '.nav-links a[href^="#"]'
-  );
-
-
-  // Only run this if the browser supports
-  // IntersectionObserver
-
-  if (
-    "IntersectionObserver" in window &&
-    sections.length > 0 &&
-    navigationAnchors.length > 0
-  ) {
-
-    const observer = new IntersectionObserver(
-      function (entries) {
-
-        entries.forEach(function (entry) {
-
-          if (!entry.isIntersecting) {
-            return;
-          }
-
-
-          // Remove active state from all links
-
-          navigationAnchors.forEach(function (anchor) {
-
-            anchor.classList.remove("active");
-
-          });
-
-
-          // Find the link corresponding
-          // to the section currently visible
-
-          const activeAnchor = document.querySelector(
-            '.nav-links a[href="#' +
-            entry.target.id +
-            '"]'
-          );
-
-
-          if (activeAnchor) {
-
-            activeAnchor.classList.add("active");
-
-          }
-
-        });
-
-      },
-      {
-        rootMargin: "-35% 0px -55% 0px",
-        threshold: 0
-      }
-    );
-
-
-    sections.forEach(function (section) {
-
-      observer.observe(section);
-
-    });
-
-  }
 
 });
